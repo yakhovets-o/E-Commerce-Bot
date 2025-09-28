@@ -1,23 +1,31 @@
 import asyncio
 import logging
 import sys
-from aiogram import Bot, Dispatcher, types, html
+from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.filters import CommandStart
+from aiogram.types.bot_command_scope_default import BotCommandScopeDefault
 from aiogram.enums import ParseMode
 
-dp = Dispatcher()
+from config import tg_config
+from handlers import router as main_router
+from menu_commands import user_menu
 
-@dp.message(CommandStart())
-async def start(message: types.Message) -> None:
-    await message.answer(f"HI!! {html.bold(message.from_user.full_name)}")
 
 async def main():
-    bot = Bot(token="",
-              default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    dp = Dispatcher()
+    dp.include_router(main_router)
+
+    bot = Bot(
+        token=tg_config.token.get_secret_value(),
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
+
+    await bot.delete_webhook(drop_pending_updates=True)
+    await bot.set_my_commands(commands=user_menu(), scope=BotCommandScopeDefault())
 
     await dp.start_polling(bot)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())

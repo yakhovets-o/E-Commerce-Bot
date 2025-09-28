@@ -6,4 +6,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aiogram>=3.22.0",
+    "pydantic-settings>=2.11.0",
+    "pydantic[email]>=2.11.9",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
 ]
