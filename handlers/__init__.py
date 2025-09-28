@@ -2,10 +2,10 @@ __all__ = ("router",)
 
 from aiogram import Router
 
-from .commands import router as commands_router
+from .user import router as user_router
 
 router = Router()
 
 router.include_routers(
-    commands_router,
+    user_router,
 )
